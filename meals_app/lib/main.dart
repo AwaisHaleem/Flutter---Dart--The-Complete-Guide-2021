@@ -1,13 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:meals_app/Models/meal.dart';
+import 'package:meals_app/Screens/filters_screen.dart';
+import 'package:meals_app/dummy_data.dart';
 
 import './Screens/category_meals_screen.dart';
 import './Screens/meals_detail_screen.dart';
 import './Screens/tabs_screen.dart';
 
-
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Map<String, bool> _filters = {
+    'gluten': false,
+    'lectose': false,
+    'vegan': false,
+    'vegetarian': false
+  };
+
+  List<Meal> _availableMeals = DUMMY_MEALS;
+  List<Meal> _favouriteMeals = [];
+
+  void _setFilters(Map<String, bool> filterData) {
+    setState(() {
+      _filters = filterData;
+      _availableMeals = DUMMY_MEALS.where((meal) {
+        if (_filters['gluten']! && !meal.isGlutenFree) {
+          return false;
+        }
+        if (_filters['lectose']! && !meal.isLactoseFree) {
+          return false;
+        }
+        if (_filters['vegan']! && !meal.isVegan) {
+          return false;
+        }
+        if (_filters['vegetarian']! && !meal.isVegetarian) {
+          return false;
+        }
+        return true;
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -30,10 +68,16 @@ class MyApp extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
       ),
-      home: TabsScreen(),
+      home: TabsScreen(
+        favouriteMeals: _favouriteMeals,
+      ),
       routes: {
-        CategoryMealsScreen.routName: (context) => CategoryMealsScreen(),
-        MealDetailScreen.routName: (context) => MealDetailScreen()
+        CategoryMealsScreen.routName: (context) => CategoryMealsScreen(
+              availableMeals: _availableMeals,
+            ),
+        MealDetailScreen.routName: (context) => MealDetailScreen(),
+        FiltersScreen.rountName: (context) =>
+            FiltersScreen(currentFilters: _filters, savedFilter: _setFilters),
       },
     );
   }

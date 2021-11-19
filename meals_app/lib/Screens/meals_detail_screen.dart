@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/Models/meal.dart';
-import 'package:meals_app/dummy_data.dart';
+
+import '../dummy_data.dart';
 
 class MealDetailScreen extends StatelessWidget {
   static const routName = "/meal_detail_screen";
@@ -40,22 +40,28 @@ class MealDetailScreen extends StatelessWidget {
               ),
             ),
             buildTitle("Steps", context),
-            buildContainer(ListView.builder(
-              itemBuilder: (context, index) => Column(
-                children: [
-                  ListTile(
-                    leading: CircleAvatar(
-                      child: Text("# ${(index + 1)}"),
+            buildContainer(
+              ListView.builder(
+                itemBuilder: (context, index) => Column(
+                  children: [
+                    ListTile(
+                      leading: CircleAvatar(
+                        child: Text("# ${(index + 1)}"),
+                      ),
+                      title: Text(selectedMeal.steps[index]),
                     ),
-                    title: Text(selectedMeal.steps[index]),
-                  ),
-                  Divider()
-                ],
+                    Divider()
+                  ],
+                ),
+                itemCount: selectedMeal.steps.length,
               ),
-              itemCount: selectedMeal.steps.length,
-            ))
+            ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.delete),
+        onPressed: () => Navigator.of(context).pop(mealId),
       ),
     );
   }
