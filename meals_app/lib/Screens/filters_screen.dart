@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/Widgets/main_drawer.dart';
+
+import '../Widgets/main_drawer.dart';
 
 class FiltersScreen extends StatefulWidget {
   static const rountName = '/filters';

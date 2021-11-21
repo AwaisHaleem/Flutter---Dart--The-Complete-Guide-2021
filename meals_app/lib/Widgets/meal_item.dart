@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/Models/meal.dart';
-import 'package:meals_app/Screens/meals_detail_screen.dart';
+
+import '../Models/meal.dart';
+import '../Screens/meals_detail_screen.dart';
 
 class MealItem extends StatelessWidget {
   final String id;
@@ -22,7 +23,7 @@ class MealItem extends StatelessWidget {
     switch (complexity) {
       case Complexity.Simple:
         return "Simple";
-        break;
+        // break;
       case Complexity.Challenging:
         return "Challenging";
       case Complexity.Hard:

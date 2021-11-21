@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/Models/meal.dart';
-import 'package:meals_app/Widgets/meal_item.dart';
 
-import '../dummy_data.dart';
+import '../Models/meal.dart';
+import '../Widgets/meal_item.dart';
+
 
 class CategoryMealsScreen extends StatefulWidget {
   static const routName = '/category-meals';
@@ -19,8 +19,6 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
   List<Meal>? displayedMeals;
   bool _loadedInItData = false;
 
-  @override
-  void initState() {}
 
   @override
   void didChangeDependencies() {
@@ -38,11 +36,11 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
     super.didChangeDependencies();
   }
 
-  void _removeMeal(String mealId) {
-    setState(() {
-      displayedMeals!.removeWhere((meal) => meal.id == mealId);
-    });
-  }
+  // void _removeMeal(String mealId) {
+  //   setState(() {
+  //     displayedMeals!.removeWhere((meal) => meal.id == mealId);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

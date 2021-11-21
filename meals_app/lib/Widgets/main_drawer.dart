@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/Screens/filters_screen.dart';
+
+import '../Screens/filters_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   @override
