@@ -60,12 +60,28 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  // void addProduct() {
-  //   // _items.add(value);
-  //   notifyListeners();
-  // }
+  void addProduct(Product prod) {
+    Product _newProd = Product(
+        id: DateTime.now().toString(),
+        title: prod.title,
+        description: prod.description,
+        price: prod.price,
+        imageUrl: prod.imageUrl);
+    _items.add(_newProd);
+    notifyListeners();
+  }
 
   Product findById(String id) {
     return _items.firstWhere((prod) => prod.id == id);
+  }
+
+  void replaceProduct(String id, Product newProduct) {
+    final int _itemIndex = _items.indexWhere((element) => element.id == id);
+    _items[_itemIndex] = newProduct;
+  }
+
+  void deleteProduct(String id) {
+    _items.removeWhere((element) => element.id == id);
+    notifyListeners();
   }
 }
