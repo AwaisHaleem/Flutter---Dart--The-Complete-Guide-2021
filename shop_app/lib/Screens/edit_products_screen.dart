@@ -85,7 +85,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
     }
   }
 
-  void _saveForm() {
+  void _saveForm() async {
     final _isValidated = _form.currentState!.validate();
     if (!_isValidated) {
       return;
@@ -95,43 +95,40 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
       _isLoading = true;
     });
     if (_editedProduct.id.isNotEmpty) {
-      Provider.of<Products>(context, listen: false)
+      setState(() {
+        _isLoading = true;
+      });
+      await Provider.of<Products>(context, listen: false)
           .replaceProduct(_editedProduct.id, _editedProduct);
+
       setState(() {
         _isLoading = false;
       });
       Navigator.of(context).pop();
     } else {
-      Provider.of<Products>(context, listen: false)
-          .addProduct(_editedProduct)
-          .catchError(
-        (error) {
-          return showDialog(
-              context: context,
-              builder: (ctx) => AlertDialog(
-                    title: Text("An error occured!"),
-                    content: Text("Ops! Something went wrong."),
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.of(ctx).pop();
-                          },
-                          child: Text("OK"))
-                    ],
-                  ))
-                .then((_) {
-          setState(() {
-            _isLoading = false;
-          });
-          });
-        },
-      ).then((_) {
-        print("then chal gya");
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .addProduct(_editedProduct);
+      } catch (e) {
+        await showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+                  title: Text("An error occured!"),
+                  content: Text("Ops! Something went wrong."),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                        },
+                        child: Text("OK"))
+                  ],
+                ));
+      } finally {
         setState(() {
           _isLoading = false;
         });
-        Navigator.of(context).pop();
-      });
+          Navigator.of(context).pop();
+      }
     }
   }
 

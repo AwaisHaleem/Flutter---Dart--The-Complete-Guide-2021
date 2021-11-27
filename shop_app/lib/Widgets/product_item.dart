@@ -34,8 +34,16 @@ class ProductItem extends StatelessWidget {
             builder: (ctx, product, child) => IconButton(
               icon: Icon(
                   product.isFavourite ? Icons.favorite : Icons.favorite_border),
-              onPressed: () {
-                product.toggleFavourite();
+              onPressed: () async {
+                try {
+                  await product.toggleFavourite(product.isFavourite, product);
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                    "Favourite Status couldn't changed",
+                    textAlign: TextAlign.center,
+                  )));
+                }
               },
               color: Theme.of(context).accentColor,
             ),
