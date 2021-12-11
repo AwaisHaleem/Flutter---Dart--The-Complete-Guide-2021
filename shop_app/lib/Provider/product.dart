@@ -19,18 +19,18 @@ class Product with ChangeNotifier {
       required this.imageUrl,
       this.isFavourite = false});
 
-  Future<void> toggleFavourite(bool isFav, Product prod) async {
+  Future<void> toggleFavourite(
+      bool isFav, Product prod, String? authToken, String? userId) async {
     final url = Uri.parse(
-        "https://shop-app-84dbd-default-rtdb.firebaseio.com/products/${prod.id}.json");
+        "https://shop-app-84dbd-default-rtdb.firebaseio.com/userFavourites/$userId/${prod.id}.json?auth=$authToken");
 
     prod.isFavourite = !isFav;
     notifyListeners();
 
-    final res =
-        await http.patch(url, body: json.encode({"isFavourite": !isFav}));
+    final res = await http.put(url, body: json.encode(isFavourite));
 
     if (res.statusCode >= 400) {
-      prod.isFavourite = isFav;
+      isFavourite = isFav;
       notifyListeners();
       throw favEception(message: "Fav Status could not changed");
     }

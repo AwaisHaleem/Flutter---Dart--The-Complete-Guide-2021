@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:shop_app/Provider/cart.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -17,17 +17,22 @@ class OrderItem {
 }
 
 class Orders with ChangeNotifier {
-  List<OrderItem> _orders = [];
+  List<OrderItem> initialOrders;
+  final String? token;
+  final String? userId;
+
+  Orders(
+      {required this.token, required this.userId, required this.initialOrders});
 
   List<OrderItem> get orders {
-    return [..._orders];
+    return [...initialOrders];
   }
 
   Future<void> fetchAndSetOrders() async {
     final url = Uri.parse(
-        "https://shop-app-84dbd-default-rtdb.firebaseio.com/orders.json");
+        "https://shop-app-84dbd-default-rtdb.firebaseio.com/orders/$userId.json?auth=$token");
     final res = await http.get(url);
-    final _loadedOrderData = json.decode(res.body) as Map<String, dynamic>;
+    final _loadedOrderData = json.decode(res.body); //as Map<String, dynamic>;
     if (_loadedOrderData == null) {
       return;
     }
@@ -45,17 +50,17 @@ class Orders with ChangeNotifier {
           }).toList(),
           dateTime: DateTime.parse(item['dateTime'])));
     });
-    _orders = _loadedOrders;
+    initialOrders = _loadedOrders.reversed.toList();
     notifyListeners();
   }
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     final url = Uri.parse(
-        "https://shop-app-84dbd-default-rtdb.firebaseio.com/orders.json");
+        "https://shop-app-84dbd-default-rtdb.firebaseio.com/orders/$userId.json?auth=$token");
 
     final timeStamp = DateTime.now();
 
-    await http.post(url,
+    final respose = await http.post(url,
         body: json.encode({
           'amount': total,
           'dateTime': timeStamp.toIso8601String(),
@@ -68,7 +73,7 @@ class Orders with ChangeNotifier {
                   })
               .toList()
         }));
-    _orders.insert(
+    initialOrders.insert(
       0,
       OrderItem(
         id: DateTime.now().toString(),
